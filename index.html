@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111111" />
+    <meta name="description" content="Aplicação criada para organizar a rotina com Pomodoro personalizável, metas, tarefas priorizadas e flashcards com revisão espaçada. Salve seus dados no navegador e importe ou exporte backups." />
+    <title>Ponto do foco</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Ritmo, início">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>Ponto do Foco</span>
+        </a>
+        <div class="topbar-tools">
+          <span class="topbar-note"><span class="live-dot"></span> UM PASSO DE CADA VEZ</span>
+          <div class="theme-picker" role="group" aria-label="Tema da aplicação">
+            <button class="theme-swatch theme-white" type="button" data-theme-choice="white" aria-label="Tema branco" aria-pressed="false" title="Tema branco"></button>
+            <button class="theme-swatch theme-pink" type="button" data-theme-choice="pink" aria-label="Tema rosa" aria-pressed="false" title="Tema rosa"></button>
+            <button class="theme-swatch theme-blue" type="button" data-theme-choice="blue" aria-label="Tema azul" aria-pressed="false" title="Tema azul"></button>
+            <button class="theme-swatch theme-black" type="button" data-theme-choice="black" aria-label="Tema preto" aria-pressed="true" title="Tema preto"></button>
+          </div>
+        </div>
+      </header>
+
+      <div class="workspace-layout">
+       <div class="main-column">
+      <section class="focus-bubbles" aria-label="Meus focos">
+        <label class="focus-bubble focus-month" for="monthly-focus">
+          <span class="focus-bubble-top"><span class="focus-bubble-dot"></span> FOCO DO MÊS</span>
+          <textarea id="monthly-focus" rows="2" maxlength="160" placeholder="Qual é sua prioridade neste mês?"></textarea>
+          <span class="focus-date-label">PERÍODO DA META</span>
+          <span class="focus-date-row">
+            <span><span class="focus-date-caption">Início</span><input id="monthly-start" type="date" aria-label="Dia de início do foco do mês" /></span>
+            <span><span class="focus-date-caption">Fim</span><input id="monthly-end" type="date" aria-label="Dia de fim do foco do mês" /></span>
+          </span>
+          <span class="focus-save-state" id="monthly-focus-state" aria-live="polite">Salvo automaticamente</span>
+        </label>
+        <label class="focus-bubble focus-week" for="weekly-focus">
+          <span class="focus-bubble-top"><span class="focus-bubble-dot"></span> FOCO DA SEMANA</span>
+          <textarea id="weekly-focus" rows="2" maxlength="160" placeholder="Em que você vai avançar esta semana?"></textarea>
+          <span class="focus-date-label">PERÍODO DA META</span>
+          <span class="focus-date-row">
+            <span><span class="focus-date-caption">Início</span><input id="weekly-start" type="date" aria-label="Dia de início do foco da semana" /></span>
+            <span><span class="focus-date-caption">Fim</span><input id="weekly-end" type="date" aria-label="Dia de fim do foco da semana" /></span>
+          </span>
+          <span class="focus-save-state" id="weekly-focus-state" aria-live="polite">Salvo automaticamente</span>
+        </label>
+      </section>
+      <section class="timer-card" aria-labelledby="phase-title">
+        <div class="mode-switch" role="group" aria-label="Etapa do Pomodoro">
+          <button class="mode-button active" data-mode="focus" type="button" aria-pressed="true">Foco</button>
+          <button class="mode-button" data-mode="rest" type="button" aria-pressed="false">Repouso</button>
+        </div>
+
+        <div class="timer-content">
+          <p class="eyebrow" id="phase-title">HORA DE CONCENTRAR</p>
+          <div class="timer" id="timer" role="timer" aria-label="Tempo restante">25:00</div>
+          <h5 class="hint" id="hint">Um bloco de cada vez. Você consegue.</h5>
+          <p class="hint" id="hint">Feche todas as abas inúteis no navegador.</p>
+          <p class="hint" id="hint">Desative todas as suas notificações.</p>
+          <p class="hint" id="hint">Ative uma trilha musical para focar.</p>
+        </div>
+
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+
+        <div class="controls">
+          <button class="reset-button" id="reset-button" type="button" aria-label="Reiniciar etapa" title="Reiniciar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11a8.5 8.5 0 1 1 2.4 6M3.5 5.5V11h5.5" /></svg>
+          </button>
+          <button class="start-button" id="start-button" type="button">
+            <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7z" /></svg>
+            <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM15 5h3v14h-3z" /></svg>
+            <span id="start-label">Começar foco</span>
+          </button>
+          <span class="control-spacer" aria-hidden="true"></span>
+        </div>
+      </section>
+
+      <section class="settings-card" aria-labelledby="settings-title">
+        <div class="settings-heading">
+          <div>
+            <p class="eyebrow">PERSONALIZE SEU RITMO</p>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label for="focus-input"><span class="setting-name"><span class="setting-dot focus-dot"></span>Tempo de foco</span><span class="setting-description">Para mergulhar na tarefa</span></label>
+          <div class="input-wrap"><input id="focus-input" type="number" min="1" max="180" value="25" inputmode="numeric" aria-label="Tempo de foco em minutos" /><span>min</span></div>
+        </div>
+        <div class="setting-row">
+          <label for="rest-input"><span class="setting-name"><span class="setting-dot rest-dot"></span>Tempo de repouso</span><span class="setting-description">Uma pausa para respirar</span></label>
+          <div class="input-wrap"><input id="rest-input" type="number" min="1" max="60" value="5" inputmode="numeric" aria-label="Tempo de repouso em minutos" /><span>min</span></div>
+        </div>
+        <p class="settings-footnote" id="settings-message" aria-live="polite">Ajuste os minutos quando quiser.</p>
+      </section>
+       </div>
+
+       <section class="todo-card" aria-labelledby="todo-title">
+        <div class="todo-header">
+          <div>
+            <p class="eyebrow">ORGANIZE SEUS PRÓXIMOS PASSOS</p>
+            <h1 id="todo-title">Todo</h1>
+          </div>
+          <span class="todo-count" id="todo-count" aria-label="Tarefas cadastradas">0</span>
+        </div>
+        <form class="todo-form" id="todo-form">
+          <input id="todo-edit-id" type="hidden" />
+          <label class="todo-bubble todo-task-bubble" for="todo-title-input">
+            <span class="todo-bubble-label">NOVA TASK</span>
+            <input id="todo-title-input" type="text" maxlength="120" placeholder="O que você precisa fazer?" required />
+          </label>
+          <fieldset class="todo-bubble todo-period-bubble">
+            <legend class="todo-bubble-label">PERÍODO DA TASK</legend>
+            <div class="todo-dates">
+              <label><span>Início</span><input id="todo-start" type="date" required /></label>
+              <label><span>Fim</span><input id="todo-end" type="date" required /></label>
+            </div>
+          </fieldset>
+          <label class="todo-priority-field" for="todo-priority">
+            <span class="todo-bubble-label">PRIORIDADE</span>
+            <select id="todo-priority">
+              <option value="urgent">Urgente</option>
+              <option value="attention">Atenção</option>
+              <option value="relaxed" selected>Sem pressa</option>
+            </select>
+          </label>
+          <div class="todo-form-actions">
+            <button class="todo-submit" id="todo-submit" type="submit">Adicionar task</button>
+            <button class="todo-cancel" id="todo-cancel" type="button" hidden>Cancelar edição</button>
+          </div>
+          <p class="todo-message" id="todo-message" aria-live="polite"></p>
+        </form>
+        <div class="todo-list" id="todo-list" aria-live="polite"></div>
+       </section>
+
+       <aside class="flashcards-card" aria-labelledby="flashcards-title">
+        <div class="flashcards-header">
+          <div>
+            <p class="eyebrow">APRENDA NO SEU RITMO</p>
+            <h1 id="flashcards-title">Flashcards</h1>
+          </div>
+          <span class="due-count" id="due-count" aria-label="Cartões para revisar hoje">0</span>
+        </div>
+        <div class="deck-manager">
+          <label class="deck-label" for="deck-select">BARALHO ATUAL</label>
+          <div class="deck-select-row">
+            <select id="deck-select" aria-label="Selecionar baralho"></select>
+            <button class="delete-deck-button" id="delete-deck-button" type="button">Excluir</button>
+          </div>
+          <form class="deck-create-form" id="deck-form">
+            <input id="deck-name" type="text" maxlength="40" placeholder="Nome do novo baralho" aria-label="Nome do novo baralho" required />
+            <button type="submit">Criar</button>
+          </form>
+          <p class="deck-message" id="deck-message" aria-live="polite"></p>
+        </div>
+        <div class="flashcard-tabs" role="tablist" aria-label="Flashcards">
+          <button class="flashcard-tab active" id="review-tab" type="button" role="tab" aria-selected="true" aria-controls="review-panel">Revisar hoje</button>
+          <button class="flashcard-tab" id="create-tab" type="button" role="tab" aria-selected="false" aria-controls="create-panel">Novo flashcard</button>
+        </div>
+
+        <section class="flashcard-panel" id="review-panel" role="tabpanel" aria-labelledby="review-tab">
+          <div class="review-meta" id="review-meta">Sua fila de revisão</div>
+          <div class="review-empty" id="review-empty" hidden>
+            <span class="empty-icon" aria-hidden="true">✓</span>
+            <h2>Tudo em dia</h2>
+            <p>Seus próximos cartões aparecem aqui quando chegar a hora de revisar.</p>
+          </div>
+          <div class="review-card-area" id="review-card-area" hidden>
+            <div class="flashcard" id="flashcard" aria-live="polite">
+              <div class="flashcard-inner" id="flashcard-inner">
+                <div class="flashcard-face flashcard-front">
+                  <span class="card-side-label">FRENTE</span>
+                  <p id="card-front"></p>
+                </div>
+                <div class="flashcard-face flashcard-back">
+                  <span class="card-side-label">VERSO</span>
+                  <p id="card-back"></p>
+                </div>
+              </div>
+            </div>
+            <button class="flip-button" id="flip-button" type="button">Virar cartão <span aria-hidden="true">↻</span></button>
+            <div class="review-actions" id="review-actions" hidden>
+              <button class="answer-button wrong-button" id="wrong-button" type="button"><span aria-hidden="true">↻</span> Errei</button>
+              <button class="answer-button easy-button" id="easy-button" type="button">Fácil <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <div class="card-library">
+            <h2>Cartões neste baralho <span id="library-count">0</span></h2>
+            <div class="card-list" id="card-list"></div>
+          </div>
+        </section>
+
+        <section class="flashcard-panel create-panel" id="create-panel" role="tabpanel" aria-labelledby="create-tab" hidden>
+          <p class="create-intro">Novo cartão em <strong id="selected-deck-name">Geral</strong>. Escreva a frente e o verso para revisar depois.</p>
+          <form id="flashcard-form">
+            <label class="field-label" for="new-front">Frente</label>
+            <textarea id="new-front" rows="3" maxlength="1000" placeholder="Ex.: O que é fotossíntese?" required></textarea>
+            <label class="field-label" for="new-back">Verso</label>
+            <textarea id="new-back" rows="3" maxlength="2000" placeholder="Ex.: Processo em que plantas convertem luz em energia." required></textarea>
+            <button class="save-card-button" type="submit">Salvar flashcard <span aria-hidden="true">＋</span></button>
+            <p class="form-message" id="form-message" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <div class="backup-actions">
+          <button id="export-button" type="button" class="backup-button">Exportar backup</button>
+          <button id="import-button" type="button" class="backup-button">Importar</button>
+          <input id="import-input" type="file" accept="application/json,.json" hidden />
+        </div>
+        <p class="backup-message" id="backup-message" aria-live="polite">Seus dados ficam salvos neste navegador. Exporte um backup para guardar uma cópia.</p>
+       </aside>
+      </div>
+      <footer class="footer"><h2>DEVELOPED BY DILLEY ANDRADE</h2></footer>
+      <footer class="footer">
+        <h4>FOCO COM CALMA NO SEU TEMPO, SEU RITMO</h4>
+      </footer>
+    </main>
+  </body>
+</html>
